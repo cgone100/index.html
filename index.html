@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    <img id='klibs' src='paperclip2.png'>
+
+    <fb:login-button
+      scope="public_profile,email"
+      onlogin="checkLoginStatus;">
+    </fb:login-button>
+
+
+    <input type="button" id="authBtn" value="checking..." 
+    onclick="if(this.value === '로그인 하기') {
+      //now logout
+      FB.login(function(res){
+        console.log('login =>', res);
+        checkLoginStatus(res);
+      });
+    } else {
+      //now login
+      FB.logout(function(res){
+        console.log('logout =>', res);
+        checkLoginStatus(res);
+      });
+    }">
+    <span id='name'></span>
+
+    <input type='button' value='nightMode on' onclick='
+    var target = document.querySelector("body");
+    if(this.value === "nightMode on"){
+      target.style.backgroundColor="black";
+      target.style.color="white";
+      this.value = "nightMode off"
+    } else {
+      target.style.backgroundColor="white";
+      target.style.color="black";
+      this.value = "nightMode on";
+    }'
+    >
+  </head>
+
+  <body>
+      
+    <!-- Load the JS SDK asynchronously -->
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+
+    <script>
+
+
+    var checkLoginStatus = function(response) {
+      console.log(response);   // Called after the JS SDK has been initialized.
+      //statusChangeCallback(response);        // Returns the login status.
+      if(response.status === 'connected') {
+        /*document.querySelector('#authBtn').value = '로그아웃 하기' */
+        FB.api('/me', function(resp){
+          document.querySelector('#name').innerHTML = 'user: ' + resp.name; 
+        });
+        window.open('target.html');
+      } /*else {
+        document.querySelector('#authBtn').value = '로그인 하기'
+        document.querySelector('#name').innerHTML = '';
+      }; */
+    };
+
+
+    window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '3693116514070673',
+      cookie     : true,                     // Enable cookies to allow the server to access the session.
+      xfbml      : true,                     // Parse social plugins on this webpage.
+      version    : 'v10.0'           // Use this Graph API version for this call.
+    });
+
+
+    
+    FB.getLoginStatus(checkLoginStatus);
+  };
+    </script>
+      
+
+
+
+
+
+  </body>
+</html>
